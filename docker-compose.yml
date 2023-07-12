@@ -1,0 +1,33 @@
+version: "3.7"
+services:
+    prometheus:
+        image: prom/prometheus
+        command: --config.file=/etc/prometheus/prometheus.yml
+        ports:
+            - "9090:9090"
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    minio:
+        image: minio/minio
+        environment:
+            - MINIO_ACCESS_KEY=AKIAIOSFODNN7EXAMPLE
+            - MINIO_SECRET_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+            - MINIO_PROMETHEUS_AUTH_TYPE=public
+            - MINIO_CACHE="on"
+            - MINIO_CACHE_DRIVES=/mnt/drive1,/mnt/drive2
+            - MINIO_CACHE_QUOTA=80 # 80% of the drive will be used for caching
+            - MINIO_CACHE_AFTER=1 # Object will be cached after the first request to it
+            - MINIO_CACHE_WATERMARK_LOW=70 # Least accessed objects will be erased after the cache disk reaches the 70% watermark
+            - MINIO_CACHE_WATERMARK_HIGH=90
+        command: server /data{1...4}
+        ports:
+            - "9000:9000"
+        volumes: 
+            - ./data/erasure-code-set1:/data1
+            - ./data/erasure-code-set2:/data2
+            - ./data/erasure-code-set3:/data3
+            - ./data/erasure-code-set4:/data4
+    grafana: 
+        image: grafana/grafana
+        ports:
+            - "3000:3000"
