@@ -1,0 +1,12 @@
+groups:
+  - name: 'Minio Alerts'
+    rules:
+      - alert: MinioBucketIssue
+        expr: minio_bucket_errors_total{bucket="test"} > 0
+        for: 5m
+        labels:
+          severity: 'critical'
+        annotations:
+          summary: 'Minio bucket test encountered an issue.'
+          description: 'The Minio bucket test has experienced errors.'
+

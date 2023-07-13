@@ -1,0 +1,14 @@
+route:
+  receiver: 'telegram'
+  group_wait: 10s
+  group_interval: 5m
+  repeat_interval: 1h
+
+receivers:
+  - name: 'telegram'
+    webhook_configs:
+      - send_resolved: true
+        url: 'https://webhook.site/4ff6af34-634a-4c9d-b7b5-9228bfb4d272'
+        http_config:
+          method: POST
+
